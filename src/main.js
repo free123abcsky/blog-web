@@ -8,10 +8,10 @@ import App from './App';
 import router from './router.js'
 import kComps from './components/index'
 import "./theme/util.scss";
-import "bootstrap/scss/bootstrap.slim.scss";
-import "bootstrap/js/tooltip.js";
-import "bootstrap/js/modal.js";
-import "bootstrap/js/transition.js";
+import "bootstrap/bootstrap.scss";
+// import "bootstrap/js/tooltip.js";
+// import "bootstrap/js/modal.js";
+// import "bootstrap/js/transition.js";
 import attachFastClick from "fastclick";
 import {ua} from './utils/utils'
 

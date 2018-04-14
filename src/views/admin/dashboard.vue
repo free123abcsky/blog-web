@@ -1,50 +1,48 @@
 <template>
-  <div class="dashboard-swapper">
-    <div class="head-title">
+
+  <div class="container-fluid page-swapper">
+    <div class="page-title">
       <h3>
         <icon type="ios-speedometer"></icon>控制台
       </h3>
     </div>
-    <div class="stat-swapper">
-      <h4 class="stat-title"><i class="fa fa-server"></i> 统计/Statistic</h4>
-      <section class="stat-content">
-        <div class="stat-item">
-          <h2>Today</h2>
-          <p>
-            {{total[0]}}
+    <h4 class="stat-title"><i class="fa fa-server"></i> 统计/Statistic</h4>
+    <section class="row stat-content ml-md-2 mr-md-2">
+      <div class="col-md stat-item">
+        <h2>Today</h2>
+        <p>
+          {{total[0]}}
             <small>PV</small>
-          </p>
-        </div>
-        <div class="stat-item">
-          <h2>Month</h2>
-          <p>
-            {{total[1]}}
+        </p>
+      </div>
+      <div class="col-md stat-item">
+        <h2>Month</h2>
+        <p>
+          {{total[1]}}
             <small>PV</small>
-          </p>
-        </div>
-        <div class="stat-item">
-          <h2>Year</h2>
-          <p>
-            {{total[2]}}
+        </p>
+      </div>
+      <div class="col-md stat-item">
+        <h2>Year</h2>
+        <p>
+          {{total[2]}}
             <small>PV</small>
-          </p>
+        </p>
+      </div>
+    </section>
+    <h4 class="stat-title"><i class="fa fa-bar-chart"></i> 今日统计/Charts</h4>
+    <section class="stat-content">
+      <div class="stat-chart" id="chart">
+        &lt;!&ndash;chart here&ndash;&gt;
         </div>
-      </section>
-      <h4 class="stat-title"><i class="fa fa-bar-chart"></i> 今日统计/Charts</h4>
-      <section class="stat-content">
-        <div class="stat-chart" id="chart">
-          <!--chart here-->
-        </div>
-      </section>
+    </section>
 
-      <h4 class="stat-title"><i class="fa fa-map-o"></i> 访问分布/Maps</h4>
-      <section class="stat-content">
-        <div class="stat-map" id="map">
-          <!--map here-->
+    <h4 class="stat-title"><i class="fa fa-map-o"></i> 访问分布/Maps</h4>
+    <section class="stat-content">
+      <div class="stat-map" id="map">
+        &lt;!&ndash;map here&ndash;&gt;
         </div>
-      </section>
-    </div>
-
+    </section>
   </div>
 </template>
 <script type="text/javascript">
@@ -233,15 +231,9 @@
   }
 </script>
 <style lang="scss">
-  //base
+
   @import "../../theme/theme.scss";
-
-  .dashboard-swapper {
-    height: 100%;
-    min-height: 500px;
-  }
-
-  .head-title{
+  .page-title{
     width:100%;
     margin-bottom: 25px;
     i {
@@ -250,16 +242,12 @@
     }
   }
 
-  .stat-swapper{
+  .page-swapper{
     .stat-title {
       color: $base-theme-color;
     }
     .stat-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       margin-bottom: 25px;
-      padding: 0 5px;
       .stat-item {
         text-align: center;
         color: #fff;
@@ -298,7 +286,4 @@
       }
     }
   }
-
-
-
 </style>

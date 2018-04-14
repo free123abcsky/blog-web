@@ -79,13 +79,13 @@ const routes = [
         name: 'artList',
         component: require('./views/blog/articleList.vue'),
       },
-      {
+/*      {
         path: 'article/:articleId',
         name: 'article',
         component: function (resolve) {
           require(['./views/blog/article.vue'], resolve)
         },
-      },
+      },*/
       {
         path: 'his-list',
         name: 'historyList',
@@ -175,14 +175,14 @@ const routes = [
             },
             meta: {requiresAuth: true},
           },
-          {
-            path: 'admin-article/:articleId',
-            name: 'admin-article',
-            component: function (resolve) {
-              require(['./views/admin/article.vue'], resolve)
-            },
-            meta: {requiresAuth: true},
-          },
+          // {
+          //   path: 'admin-article/:articleId',
+          //   name: 'admin-article',
+          //   component: function (resolve) {
+          //     require(['./views/admin/article.vue'], resolve)
+          //   },
+          //   meta: {requiresAuth: true},
+          // },
         ]
       },
       {
@@ -190,6 +190,14 @@ const routes = [
         name: 'admin-commentList',
         component: function (resolve) {
           require(['./views/admin/commentList.vue'], resolve)
+        },
+        meta: {title: '评论管理', requiresAuth: true},
+      },
+      {
+        path: 'comments1',
+        name: 'admin-commentList1',
+        component: function (resolve) {
+          require(['./views/admin/commentList1.vue'], resolve)
         },
         meta: {title: '评论管理', requiresAuth: true},
       },

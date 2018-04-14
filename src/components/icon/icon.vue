@@ -34,7 +34,6 @@
     props: {
       type: String,
       size: [Number, String],
-      class: String,
       color: String
     },
     computed: {

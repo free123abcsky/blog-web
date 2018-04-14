@@ -1,162 +1,105 @@
 <template>
-  <div class="tags-swapper">
+  <div class="container-fluid page-swapper">
     <div class="head-title">
       <h3>
         <icon type="ios-pricetag"></icon>标签管理
       </h3>
     </div>
-    <!--增加-->
-    <div class="btnBox text-right">
-      <button data-toggle="modal" data-target="#addTag" @click="addNewTagBtn()" class="btn btn-success">
+    <div class="float-right table-toolbar">
+      <button class="btn btn-success" @click="addTagModal=!addTagModal" >
         <icon type="android-add"></icon>
       </button>
     </div>
-    <div class="tableScrollBox">
-      <div class="table-body">
-        <table class="table table-condensed" id="table">
-          <thead>
-          <tr class="text-center">
-            <th>#</th>
-            <th @click="order('name')">
-              标签名称/Name
-              <span v-if="predicate == 'name'">
+    <table class="table table-responsive-sm table-striped">
+      <thead>
+      <tr>
+        <th>#</th>
+        <th @click="order('name')">
+          标签名称/Name
+          <span v-if="predicate == 'name'">
                         <i v-if="reverse==='asc'" class="fa fa-caret-up"></i>
                         <i v-if="reverse==='desc'" class="fa fa-caret-down"></i>
                     </span>
-            </th>
-            <th @click="order('catalogue_name')">
-              分类名称/Cat.
-              <span v-if="predicate == 'catalogue_name'">
+        </th>
+        <th @click="order('catalogue_name')">
+          分类名称/Cat.
+          <span v-if="predicate == 'catalogue_name'">
                         <i v-if="reverse==='asc'" class="fa fa-caret-up"></i>
                         <i v-if="reverse==='desc'" class="fa fa-caret-down"></i>
                     </span>
-            </th>
-            <th @click="order('used_num')">引用数/Quote
+        </th>
+        <th @click="order('used_num')">引用数/Quote
                 <span v-if="predicate == 'used_num'">
                         <i v-if="reverse==='asc'" class="fa fa-caret-up"></i>
                         <i v-if="reverse==='desc'" class="fa fa-caret-down"></i>
                     </span></th>
-            <th @click="order('create_time')">创建时间/C.T.
+        <th @click="order('create_time')">创建时间/C.T.
                 <span v-if="predicate == 'create_time'">
                         <i v-if="reverse==='asc'" class="fa fa-caret-up"></i>
                         <i v-if="reverse==='desc'" class="fa fa-caret-down"></i>
                     </span>
-            </th>
-            <th>操作</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr v-for="(tag,index) in orderedTagList">
-            <!--<tr v-for="tag in tagLists | orderBy predicate reverse">-->
-            <td>{{index+1}}</td>
-            <td>{{tag.name}}</td>
-            <td>{{tag.catalogue_name}}</td>
-            <td>{{tag.used_num}}</td>
-            <td>{{tag.create_time | moment("YYYY/MM/DD")}}</td>
-            <td>
-              <button data-toggle="modal" data-target="#editTag" @click="editTagBtn(tag)" class="btn btn-default btn-sm">
-                <icon type="edit"></icon>
-              </button>
-              <button data-toggle="modal" data-target="#delTag" @click="delTagBtn(tag._id)" class="btn btn-danger btn-sm">
-                <i class="fa fa-bitbucket"></i>
-                <icon type="ios-trash"></icon>
-              </button>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
+        </th>
+        <th>操作</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr v-for="(tag,index) in orderedTagList">
+        <td>{{index+1}}</td>
+        <td>{{tag.name}}</td>
+        <td>{{tag.catalogue_name}}</td>
+        <td>{{tag.used_num}}</td>
+        <td>{{tag.create_time | moment("YYYY/MM/DD")}}</td>
+        <td>
+          <button class="btn btn-default btn-sm" @click="editTagBtn(tag)">
+            <icon type="edit"></icon>
+          </button>
+          <button class="btn btn-danger btn-sm" @click="confirmDelTag(tag._id)">
+            <icon type="ios-trash"></icon>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
 
-    </div>
-
-    <!--弹出层-增加-->
-    <div class="modal fade" id="addTag" tabindex="-1" role="dialog"
-         v-on:keyup.enter="!!newTag.name&&!!newTag.catalogue_name&&confirmSaveNewTagBtn()">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-            <h4 class="modal-title"><i class="fa fa-plus-square"></i> 增加标签/ADDTAGS</h4>
-          </div>
-          <div class="modal-body">
-            <form name="addTags">
-              <div class="form-group" :class="{true:'has-error',false:''}[!newTag.name]">
-                <label class="control-label">标签名/Name</label>
-                <input type="text" class="form-control" name="tagname" v-model="newTag.name" placeholder="请输入标签名称"
-                       required>
-              </div>
-              <div class="form-group" :class="{true:'has-error',false:''}[!newTag.catalogue_name]">
-                <label class="control-label">分类名/Cat.</label>
-                <input type="text" class="form-control" name="catname" v-model="newTag.catalogue_name"
-                       placeholder="请输入分类名称" required>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <span class="submitText">{{submitText}}</span>
-            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-            <button v-bind:disabled="!newTag.name||!newTag.catalogue_name" @click="confirmSaveNewTagBtn()"
-                    type="button" class="btn btn-success">保存
-            </button>
-          </div>
+    <!--弹出层-新增-->
+    <Modal
+      v-model="addTagModal"
+      title="增加标签"
+      ok-text="保存"
+      @on-ok="confirmSaveNewTag"
+      @on-cancel="">
+      <form>
+        <div class="form-group" :class="{true:'has-error',false:''}[!newTag.name]">
+          <label for="tagname">标签名/Name</label>
+          <input type="text" class="form-control" v-model="newTag.name" id="tagname" aria-describedby="emailHelp" placeholder="请输入标签名称 email">
         </div>
-      </div>
-    </div>
+        <div class="form-group" :class="{true:'has-error',false:''}[!newTag.catalogue_name]">
+          <label for="catname">分类名/Cat.</label>
+          <input type="text" class="form-control" v-model="newTag.catalogue_name" id="catname" placeholder="请输入分类名称">
+        </div>
+      </form>
+    </Modal>
 
     <!--弹出层-修改-->
-    <div class="modal fade" id="editTag" tabindex="-1" role="dialog"
-         v-on:keyup.enter="!!editTag.name&&!!editTag.catalogue_name&&confirmEditTagBtn()">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-            <h4 class="modal-title"><i class="fa fa-pencil"></i> 修改标签/EDITTAGS</h4>
-          </div>
-          <div class="modal-body">
-            <form name="editTags">
-              <div class="form-group" :class="{true:'has-error',false:''}[!editTag.name]">
-                <label class="control-label">标签名/TagName:</label>
-                <input type="text" class="form-control" name="tagname" v-model="editTag.name" required>
-              </div>
-              <div class="form-group" :class="{true:'has-error',false:''}[!editTag.catalogue_name]">
-                <label class="control-label">分类名/Cat.Name:</label>
-                <input type="text" class="form-control" name="catname" v-model="editTag.catalogue_name" required>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <span class="submitText">{{submitText}}</span>
-            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-            <button v-bind:disabled="!editTag.name||!editTag.catalogue_name" @click="confirmEditTagBtn()" type="button"
-                    class="btn btn-success">修改
-            </button>
-          </div>
+    <Modal
+      v-model="editTagModal"
+      title="修改标签"
+      ok-text="保存"
+      @on-ok="confirmEditTag"
+      @on-cancel="">
+      {{!!editTag.name && !!editTag.catalogue_name}}
+      <form>
+        <div class="form-group" :class="{true:'has-error',false:''}[!editTag.name]">
+          <label for="tagname">标签名/Name</label>
+          <input type="text" class="form-control" v-model="editTag.name" id="tagname" placeholder="请输入标签名称 email" required>
         </div>
-      </div>
-    </div>
-
-    <!--弹出层-删除-->
-    <div class="modal fade" id="delTag" tabindex="-1" role="dialog" v-on:keyup.enter="confirmDelTagBtn()">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-            <h4 class="modal-title"><i class="fa fa-bitbucket"></i> 删除标签/DELTAGS</h4>
-          </div>
-          <div class="modal-body">
-            <h3 class="text-center deleteConfirmText">确认删除此标签?</h3>
-          </div>
-          <div class="modal-footer">
-            <span class="submitText">{{submitText}}</span>
-            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-            <button type="button" @click="confirmDelTagBtn()" class="btn btn-danger">删除</button>
-          </div>
+        <div class="form-group" :class="{true:'has-error',false:''}[!editTag.catalogue_name]">
+          <label for="catname">分类名/Cat.</label>
+          <input type="text" class="form-control" v-model="editTag.catalogue_name" id="catname" placeholder="请输入分类名称" required>
         </div>
-      </div>
-    </div>
-  </div>
-
-
+      </form>
+    </Modal>
+</div>
 </template>
 
 <script type="text/javascript">
@@ -173,6 +116,9 @@
   module.exports = {
     data: function () {
       return {
+        addTagModal: false,
+        editTagModal: false,
+        delTagModal: false,
         reverse: 'desc',
         predicate: 'used_num',
         tagLists: [],
@@ -205,10 +151,9 @@
       /**
        * 获取列表
        * */
-      getList: function () {
-        const scope = this;
+      getTagList: function () {
         GetTagsList().then((data)=> {
-          scope.tagLists = data;
+          this.tagLists = data;
         }, (err) => {
         })
       },
@@ -223,19 +168,7 @@
           this.reverse = 'asc';
         }
       },
-      /**
-       * 模态框弹出(新增)
-       * */
-      addNewTagBtn: function () {
-        const scope = this;
-        scope.submitText = '';
-        //init
-        scope.newTag = {
-          name: null,
-          catalogue_name: null
-        };
-      },
-      confirmSaveNewTagBtn: function () {
+      confirmSaveNewTag: function () {
         const scope = this;
         let params = {
           name: scope.newTag.name,
@@ -243,13 +176,8 @@
         };
         this.submitText = '正在提交...';
         AddTag(params).then(()=> {
-          // 刷新列表
-          this.getList();
-          //操作提示
-          $('#addTag').modal('hide');
-          setTimeout(function () {
-            scope.submitText = null;
-          }, 2000);
+          this.getTagList();
+          this.addTagModal = false
         }, (code)=> {
           //操作提示
           switch (parseInt(code)) {
@@ -263,9 +191,7 @@
               scope.submitText = '修改失败!';
               break;
           }
-          setTimeout(function () {
-            scope.submitText = null;
-          }, 2000);
+          this.$Message.warning(scope.submitText)
         });
       },
       /**
@@ -273,6 +199,7 @@
        * */
       editTagBtn: function (tagInfo) {
         const scope = this;
+        this.editTagModal = true
         scope.submitText = '';
         scope.editTag = {
           _id: tagInfo._id,
@@ -280,17 +207,12 @@
           catalogue_name: tagInfo.catalogue_name,
         };
       },
-      confirmEditTagBtn: function () {
+      confirmEditTag: function () {
         const scope = this;
         scope.submitText = '正在提交...';
         EditTag(scope.editTag).then(()=> {
-          // 刷新列表
-          scope.getList();
-          //操作提示
-          $('#editTag').modal('hide');
-          setTimeout(function () {
-            scope.submitText = null;
-          }, 2000);
+          this.getTagList();
+          this.editTagModal = false
         }, (code)=> {
           //操作提示
           switch (parseInt(code)) {
@@ -307,46 +229,41 @@
               scope.submitText = '修改失败!';
               break;
           }
-          setTimeout(function () {
-            scope.submitText = null;
-          }, 2000);
+          this.$Message.warning(scope.submitText)
         })
       },
       /**
-       * 模态框弹出(删除)
+       * 确认删除标签
        * */
-      delTagBtn: function (id) {
+      confirmDelTag: function (id) {
         const scope = this;
+        this.delTagModal = true
         scope.submitText = '';
         scope.delTag = {
           _id: id
         };
-      },
-      confirmDelTagBtn: function () {
-        const scope = this;
-        scope.submitText = '正在删除...';
-        DeleteTag(scope.delTag._id).then(()=> {
-          // 刷新列表
-          scope.getList();
-          //操作提示
-          $('#delTag').modal('hide');
-          setTimeout(function () {
-            scope.submitText = null;
-          }, 2000, true);
-        }, ()=> {
-          //操作提示
-          scope.submitText = '删除失败!';
-          setTimeout(function () {
-            scope.submitText = null;
-          }, 2000, true);
-        })
-      },
+        this.$Modal.confirm({
+          title: '确认对话框标题',
+          content: '<p>确定删除该标签?</p>',
+          loading: true,
+          onOk: () => {
+            this.submitText = '正在删除...';
+            DeleteTag(this.delTag._id).then(()=> {
+              // 刷新列表
+              this.getTagList();
+              this.delTagModal = false
+            }, ()=> {
+              //操作提示
+              this.submitText = '删除失败!';
+              this.$Message.warning(scope.submitText)
+            })
+          }
+        });
+      }
     },
     mounted: function () {
-      /**
-       * GetTagsList
-       * */
-      this.getList();
+
+      this.getTagList();
     }
   }
 </script>
@@ -363,49 +280,7 @@
     }
   }
 
-
-  .deleteConfirmText {
-    margin: 10px;
+  .table-toolbar{
+    padding: 0px 10px 10px 10px;
   }
-
-  .tags-swapper {
-    height: 100%;
-    .title {
-      width: 100%;
-      color: #fff;
-      margin-bottom: 10px;
-      text-align: left;
-    }
-    .btnBox {
-    }
-    table {
-      color: #fff;
-      th {
-        text-align: center;
-        color: #00b2e2;
-        cursor: pointer;
-        position: relative;
-        span {
-          position: absolute;
-          margin-left: 5px;
-          top: inherit;
-          left: inherit;
-        }
-      }
-      .danger td {
-        background-color: rgba(255, 2, 0, 0.53) !important;
-      }
-      .warning td {
-        background-color: rgba(2, 255, 0, 0.35) !important;
-      }
-      td {
-        vertical-align: middle !important;
-        font-size: 14px;
-        text-align: center;
-        border-top-color:transparent;
-        border-bottom:1px solid $border-bottom-dark;
-      }
-    }
-  }
-
 </style>

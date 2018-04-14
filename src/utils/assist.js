@@ -90,6 +90,40 @@ export function scrollTop(el, from = 0, to, duration = 500) {
   scroll(from, to, step);
 }
 
+
+// Find components upward
+export function findComponentUpward (context, componentName, componentNames) {
+  if (typeof componentName === 'string') {
+    componentNames = [componentName];
+  } else {
+    componentNames = componentName;
+  }
+
+  let parent = context.$parent;
+  let name = parent.$options.name;
+  while (parent && (!name || componentNames.indexOf(name) < 0)) {
+    parent = parent.$parent;
+    if (parent) name = parent.$options.name;
+  }
+  return parent;
+}
+
+// getStyle
+export function getStyle (element, styleName) {
+  if (!element || !styleName) return null;
+  styleName = camelCase(styleName);
+  if (styleName === 'float') {
+    styleName = 'cssFloat';
+  }
+  try {
+    const computed = document.defaultView.getComputedStyle(element, '');
+    return element.style[styleName] || computed ? computed[styleName] : null;
+  } catch(e) {
+    return element.style[styleName];
+  }
+}
+
+
 /**
  * 动态更新页面标题
  * @param title

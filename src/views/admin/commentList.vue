@@ -164,10 +164,6 @@
     SendComment,
   } from "../../api/api_comment";
 
-  import "bootstrap/js/dropdown.js";//放到它出现的位置
-  import "bootstrap/scss/bootstrap/_dropdowns.scss";
-
-
   module.exports = {
     data: function () {
       return {

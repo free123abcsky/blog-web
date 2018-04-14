@@ -16,9 +16,10 @@
         navs: [
           {text: '控制台', icon: 'ios-speedometer', toRoute: 'admin-dashboard'},
           {text: '标签管理', icon: 'ios-pricetag', toRoute: 'admin-tag'},
-          {text: '文章管理', icon: 'ios-list', toRoute: 'admin-articleManager'},
+          //{text: '文章管理', icon: 'ios-list', toRoute: 'admin-articleManager'},
           {text: '文章管理(新)', icon: 'ios-list', toRoute: 'articles'},
           {text: '文章评论', icon: 'chatbubbles', toRoute: 'admin-commentList'},
+          {text: '文章评论1', icon: 'chatbubbles', toRoute: 'admin-commentList1'},
         ]
       }
     },

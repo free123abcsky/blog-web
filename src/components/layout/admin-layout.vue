@@ -82,14 +82,13 @@
           content: '<p>确定退出后台管理?</p>',
           loading: true,
           onOk: () => {
-            const _this = this;
-            setTimeout(function () {
-              _this.$localStorage.$delete('authorization');
-              _this.$localStorage.$delete('commentInfo');
-              _this.setLoginState(false);// 登录状态
-              _this.setCommentInfoStatus(false);// 评论信息状态
-              _this.$Modal.remove();
-              _this.$router.push({
+            setTimeout(() => {
+              this.$localStorage.$delete('authorization');
+              this.$localStorage.$delete('commentInfo');
+              this.setLoginState(false);// 登录状态
+              this.setCommentInfoStatus(false);// 评论信息状态
+              this.$Modal.remove();
+              this.$router.push({
                 name: 'index'
               });
             }, 200);
@@ -100,7 +99,7 @@
 
         window.onresize = () => {
           return (() => {
-            this.state = false;
+            this.close()
           })()
         }
       }
@@ -115,14 +114,13 @@
 
 <style lang="scss">
 
-  .drawer, .drawer-content{
+  .drawer,.drawer-content{
     height: 100%;
+    width: 100%;
   }
 
   .drawer-navbar {
     position: fixed;
-    left: 0;
-    right: 0;
     top: 0;
     z-index:101;
     width:220px;
@@ -130,6 +128,10 @@
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.18);
     border-top: 2px solid #59bfff;
     background-color: #34393d;
+  }
+
+  .drawer-open .drawer-navbar{
+    left: 0;
   }
 
   .drawer-navbar a:hover {
@@ -191,6 +193,7 @@
     position: fixed;
     z-index: 104;
     top: 0;
+    left: 0;
     padding: 10px;
     box-sizing: border-box;
     width: 50px;
@@ -321,16 +324,6 @@
     }
   }
 
-  .drawer-mask.active{
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 100;
-    background: rgba(6, 6, 6, 0.08);
-  }
-
   @media (max-width: 640px) {
 
     .drawer-navbar-fixed{
@@ -380,11 +373,14 @@
     .drawer-left .drawer-nav{
       position: fixed;
       top: 0px;
+      left: -16.25rem;
       bottom: 0px;
       z-index: 101;
       overflow: hidden;
       width: 16.25rem;
       background: #34393d;
+      -webkit-transition: left .6s cubic-bezier(0.190, 1.000, 0.220, 1.000);
+      transition: left .6s cubic-bezier(0.190, 1.000, 0.220, 1.000);
     }
 
     .drawer-left .drawer-menu-item{
@@ -401,12 +397,6 @@
       background: #59A550;
     }
 
-    .drawer-left .drawer-nav {
-      left: -16.25rem;
-      -webkit-transition: left .6s cubic-bezier(0.190, 1.000, 0.220, 1.000);
-      transition: left .6s cubic-bezier(0.190, 1.000, 0.220, 1.000);
-    }
-
     .drawer-left.drawer-open .drawer-nav{
       left: 0;
     }
@@ -415,14 +405,29 @@
     .drawer-left.drawer-open .drawer-navbar .drawer-hamburger {
       right: 0;
     }
+
+    .drawer-mask.active{
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 100;
+      background: rgba(6, 6, 6, 0.08);
+    }
   }
 
   @media (min-width: 640px) {
+    .drawer-navbar{
+      left: 0;
+    }
+    .drawer-left{
+      padding-left: 220px;
+    }
     .drawer-navbar .drawer-hamburger{
       display: none;
     }
     .drawer-content{
-      margin-left: 220px;
       padding: 10px;
     }
   }
