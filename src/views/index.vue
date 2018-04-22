@@ -74,7 +74,7 @@
         top: 0;
         width: 100%;
         height: 100%;
-        background: url(http://demo.lywanjia.cn/variant/wp-content/themes/Variant/images/mask.png);
+        background: url(../assets/mask.png);
         z-index: 0
       }
       &:after {
